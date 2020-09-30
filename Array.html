@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./array.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>Samnet Array Iterator</title>
+  </head>
+  <body>
+    <!-- Image and text -->
+    <nav class="navbar navbar-light bg-light">
+      <a class="navbar-brand" href="#">
+        <img
+          src="./ArrayIterator.png"
+          width="40"
+          height="30"
+          class="d-inline-block align-top mx-5"
+          alt="ArrayIterator"
+          loading="lazy"
+        />
+        <b> My Array Iterator </b>
+      </a>
+    </nav>
+    <section class="main-content">
+      <div
+        class="container-fluid d-flex align-items-center justify-content-around h-100 w-100"
+        id="app"
+      >
+        <div class="inputObject">
+          <form action="#">
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1"
+                >Input Your List Object in below Textarea</label
+              >
+              <textarea
+                class="form-control mb-4"
+                id="exampleFormControlTextarea1"
+                rows="3"
+                v-model="str_input"
+              ></textarea>
+              <label for="del">Please Enter Delimiter</label>
+              <input type="text" id="del" v-model="delimiter" default="," />
+              <button class="btn btn-outline-success" @click="getCords()">
+                Analyse
+              </button>
+              <span v-if="input_cord_val">{{ cords }}</span>
+            </div>
+          </form>
+        </div>
+        <div class="jumbotron">
+          <h1 class="display-4 text-center mb-4">Array Iterator</h1>
+          <p class="lead display-5">
+            Length of an Array is : {{ cords.length }}
+          </p>
+          <div class="alert alert-danger" role="alert" v-if="warning">
+            <strong>Last</strong> Element of an Array
+          </div>
+          <hr class="my-4" />
+          <h1 id="displayData" class="my-5">
+            At Index {{ index }} Cordinate is <b>{{ cords[index] }}</b>
+          </h1>
+          <form class="form-inline">
+            <label for="indexVal"
+              >Input range is 0 and {{ cords.length-1 }}</label
+            >
+            <input
+              type="number"
+              id="indexVal"
+              v-model="index"
+              min="0"
+              max="index.length"
+              class="form-control mx-4"
+              title="Invalid Input "
+            />
+          </form>
+
+          <br /><br />
+          <button
+            type="button"
+            class="btn btn-outline-secondary mx-3 px-3 btn-lg"
+            data-toggle="button"
+            aria-pressed="false"
+            autocomplete="off"
+            @click="reset()"
+          >
+            Reset
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-primary mx-3 px-3 btn-lg"
+            data-toggle="button"
+            aria-pressed="false"
+            autocomplete="off"
+            :disabled="warning"
+            @click="next()"
+          >
+            Next
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-primary mx-3 px-3 btn-lg"
+            data-toggle="button"
+            aria-pressed="false"
+            autocomplete="off"
+            @click="previous()"
+            :disabled="disablePrev"
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-danger mx-3 px-3 btn-lg"
+            data-toggle="button"
+            aria-pressed="false"
+            autocomplete="off"
+            @click="last()"
+          >
+            Last
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Vue Script -->
+    <script>
+      var app = new Vue({
+        el: '#app',
+        data: {
+          str_input: '',
+          delimiter: ',',
+          cord_input: [],
+          input_cord_val: false,
+          cords: [
+            [-122.396172, 37.791439],
+            [-122.39592, 37.791237],
+            [-122.395828, 37.791161],
+            [-122.395737, 37.791222],
+            [-122.395432, 37.791462],
+            [-122.395096, 37.791737],
+            [-122.395042, 37.791779],
+            [-122.394951, 37.791851],
+            [-122.395042, 37.791924],
+            [-122.395218, 37.792061],
+            [-122.395264, 37.792103],
+            [-122.395393, 37.792202],
+            [-122.395493, 37.792282],
+            [-122.395538, 37.792316],
+            [-122.395744, 37.792477],
+            [-122.395882, 37.792587],
+            [-122.396065, 37.792732],
+            [-122.396233, 37.792896],
+            [-122.396362, 37.793018],
+            [-122.396385, 37.793064],
+            [-122.396408, 37.793102],
+            [-122.3964, 37.793152],
+            [-122.396378, 37.793232],
+            [-122.396362, 37.793278],
+            [-122.396347, 37.793312],
+            [-122.396317, 37.793388],
+            [-122.396317, 37.793461],
+            [-122.396324, 37.793549],
+            [-122.396355, 37.793678],
+            [-122.396355, 37.793686],
+            [-122.396477, 37.793663],
+            [-122.396561, 37.793652],
+            [-122.397514, 37.793526],
+            [-122.397629, 37.793514],
+            [-122.397629, 37.793507],
+            [-122.397606, 37.793419],
+            [-122.397552, 37.79314],
+            [-122.397507, 37.792919],
+            [-122.397484, 37.792812],
+            [-122.397461, 37.792694],
+            [-122.397453, 37.792645],
+            [-122.397438, 37.792587],
+            [-122.39743, 37.792557],
+            [-122.397408, 37.792465],
+            [-122.397408, 37.792439],
+            [-122.397392, 37.792419],
+            [-122.397377, 37.792393],
+            [-122.397316, 37.792336],
+            [-122.396904, 37.792019],
+            [-122.396782, 37.791927],
+            [-122.396698, 37.791859],
+            [-122.396469, 37.791676],
+            [-122.396309, 37.791546],
+            [-122.39592, 37.791237],
+            [-122.395828, 37.791161],
+            [-122.395737, 37.791222],
+            [-122.395432, 37.791462],
+            [-122.395096, 37.791737],
+            [-122.395042, 37.791779],
+            [-122.394951, 37.791851],
+            [-122.395042, 37.791924],
+            [-122.395218, 37.792061],
+            [-122.395264, 37.792103],
+            [-122.395393, 37.792202],
+            [-122.395493, 37.792282],
+            [-122.395538, 37.792316],
+            [-122.395744, 37.792477],
+            [-122.395882, 37.792587],
+            [-122.396065, 37.792732],
+            [-122.396233, 37.792896],
+            [-122.396362, 37.793018],
+            [-122.396385, 37.793064],
+            [-122.396408, 37.793102],
+            [-122.3964, 37.793152],
+            [-122.396378, 37.793232],
+            [-122.396362, 37.793278],
+            [-122.396072, 37.793503],
+          ],
+          index: 0,
+          warning: false,
+          disablePrev: false,
+        },
+        methods: {
+          next() {
+            if (this.index >= this.cords.length - 2) {
+              this.index = this.cords.length - 1;
+            } else {
+              this.index++;
+            }
+          },
+          previous() {
+            if (this.index <= 0) {
+              this.index = 0;
+            } else {
+              this.index--;
+            }
+          },
+          reset() {
+            this.index = 0;
+          },
+          last() {
+            this.index = this.cords.length - 1;
+          },
+          getCords() {
+            var patt = new RegExp(this.delimiter);
+            if (patt.test(this.str_input)) {
+              this.cords = this.str_input.split(this.delimiter);
+              this.input_cord_val = true;
+            } else {
+              this.input_cord_val = false;
+            }
+          },
+        },
+        watch: {
+          index: {
+            handler: function (val, oldVal) {
+              if (val == 0) {
+                this.disablePrev = true;
+              } else {
+                this.disablePrev = false;
+              }
+              if (val == this.cords.length - 1) {
+                this.warning = true;
+              } else {
+                this.warning = false;
+              }
+            },
+            immediate: true,
+          },
+        },
+      });
+    </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
